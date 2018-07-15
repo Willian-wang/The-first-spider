@@ -2,6 +2,7 @@
 import urllib.request 
 import http.cookiejar
 from bs4 import BeautifulSoup
+import txt_to_excel
 
 def getdata(aue,fileObject,n):
     #cookie=http.cookiejar.CookieJar()
@@ -20,16 +21,18 @@ def getdata(aue,fileObject,n):
     n=str(n)
     for item in content:
         for string_item in item.stripped_strings:
-            print(string_item)
+            #print(string_item)
             fileObject.write(string_item)
             fileObject.write('\n')
+    print("Complete %s/351"% n)
     #aue=soup.find("a",string=n)
     #aue=aue['href']
     #return aue
 
 n=0
 aue="http://ce.sysu.edu.cn/hope/html/Internal/Journals/index_0.html"
-fileObject = open('日志.txt', 'a',encoding="utf-8")  
+fileObject = open('日志.txt', 'a',encoding="utf-8") 
+getdata("http://ce.sysu.edu.cn/hope/html/Internal/Journals/index.html",fileObject,n)
 while n<350:
     str1=str(n)
     str2=str(n+1)
@@ -37,3 +40,4 @@ while n<350:
     getdata(aue,fileObject,n)
     n=n+1
 fileObject.close()  
+txt_to_excel.txt_to_excel()
