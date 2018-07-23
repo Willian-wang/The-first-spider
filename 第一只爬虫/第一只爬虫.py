@@ -24,20 +24,19 @@ def getdata(aue,fileObject,n):
             #print(string_item)
             fileObject.write(string_item)
             fileObject.write('\n')
-    print("Complete %s/351"% n)
+    print("Complete %s/13176"% n)
     #aue=soup.find("a",string=n)
     #aue=aue['href']
     #return aue
 
 n=0
-aue="http://ce.sysu.edu.cn/hope/html/Internal/Journals/index_0.html"
+aue="http://ce.sysu.edu.cn/hope/Diaries/Index_0.aspx"
 fileObject = open('日志.txt', 'a',encoding="utf-8") 
-getdata("http://ce.sysu.edu.cn/hope/html/Internal/Journals/index.html",fileObject,n)
-while n<350:
+while n<13176:
     str1=str(n)
     str2=str(n+1)
     aue=aue.replace(str1,str2)
     getdata(aue,fileObject,n)
     n=n+1
-fileObject.close()  
+fileObject.close()   
 txt_to_excel.txt_to_excel()

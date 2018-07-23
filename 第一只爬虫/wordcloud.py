@@ -1,0 +1,4 @@
+
+import jieba
+
+file=open("")

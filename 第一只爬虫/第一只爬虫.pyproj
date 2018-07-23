@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="wordcloud.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="txt_to_excel.py">
       <SubType>Code</SubType>
     </Compile>

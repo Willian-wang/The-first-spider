@@ -17,9 +17,10 @@ def txt_to_excel():
            colmun=0
            rows=rows+1
            worksheet.write(rows,colmun,line)
+           colmun=colmun+1
         elif (colmun!=4):
-            colmun=colmun+1
             worksheet.write(rows,colmun,line)
+            colmun=colmun+1
         else:
             content=content+line
         if not line:
