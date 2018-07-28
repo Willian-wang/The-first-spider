@@ -24,6 +24,7 @@ class CatchDataThread(threading.Thread):
         print(str(self.threadID)+"号线程开始")
         global Counter_1
         global thread_EXIT
+        global Counter_2
         while 1:
             lock.acquire()
             if self.Urlqueue.empty():
@@ -35,35 +36,40 @@ class CatchDataThread(threading.Thread):
             lock.release()
             url="http://ce.sysu.edu.cn/hope/Diaries/Index_"+str(num)+".aspx"
             self.Dataqueue.put(RequireData(url,self.headers))
-        print(str(self.threadID)+"号线程结束")
-
-class DealDataThread(threading.Thread):
-    def __init__(self,threadID,Dataqueue,lock,file):
-        threading.Thread.__init__(self)
-        self.Dataqueue=Dataqueue
-        self.Datalock=lock
-        self.file=file
-        self.threadID=threadID
-    def run(self):
-        global thread_EXIT
-        global Counter_2
-
-        print(str(self.threadID)+"号线程开始")
-        while 1:
             lock.acquire()
-            if not self.Dataqueue.empty(): 
-                Counter_2=Counter_2+1
-                print("-    "+str(Counter_2)+"/13176")
-                ProduceData(self.Dataqueue.get())
-                lock.release()
-            else:
-                lock.release()
-                if not thread_EXIT:
-                    pass
-                else :
-                    break
+            Counter_2=Counter_2+1
+            print("-    "+str(Counter_2)+"/13176")
+            ProduceData(self.Dataqueue.get())
+            lock.release()
         print(str(self.threadID)+"号线程结束")
-                
+
+#class DealDataThread(threading.Thread):
+#    def __init__(self,threadID,Dataqueue,lock,file):
+#        threading.Thread.__init__(self)
+#        self.Dataqueue=Dataqueue
+#        self.Datalock=lock
+#        self.file=file
+#        self.threadID=threadID
+#    def run(self):
+#        global thread_EXIT
+#        global Counter_2
+#
+#        print(str(self.threadID)+"号线程开始")
+#        while 1:
+#            lock.acquire()
+#            if not self.Dataqueue.empty(): 
+#                Counter_2=Counter_2+1
+#                print("-    "+str(Counter_2)+"/13176")
+#                ProduceData(self.Dataqueue.get())
+#                lock.release()
+#            else:
+#                lock.release()
+#                if not thread_EXIT:
+#                    pass
+#                else :
+#                    break
+#        print(str(self.threadID)+"号线程结束")
+#                
 
 def RequireData(url,headers):
     data=bytes(urllib.parse.urlencode({'用户名':'谢志强'},{'密码':''}),encoding='utf8')
@@ -94,7 +100,7 @@ lock=threading.Lock()
 
 for i in range(1,301):
     Urlqueue.put(i)
-for threadID in range(1,8):
+for threadID in range(1,17):
     thread=CatchDataThread(threadID,Urlqueue,Dataqueue,lock)
     threads.append(thread)
     thread.start()
@@ -104,11 +110,11 @@ for threadID in range(1,8):
 while not Urlqueue.empty ():
     pass
 
-for threadID in range(8,9):
-    thread=DealDataThread(threadID,Dataqueue,lock,file)
-    threads.append(thread)
-    thread.start()
-
+#for threadID in range(8,9):
+#    thread=DealDataThread(threadID,Dataqueue,lock,file)
+#    threads.append(thread)
+#    thread.start()
+#
 while not Dataqueue.empty():
     pass
 
