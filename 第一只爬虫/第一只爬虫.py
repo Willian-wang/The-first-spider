@@ -21,17 +21,21 @@ class CatchDataThread(threading.Thread):
         self.lock=lock
         self.headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
     def run(self):
-        print(str(threadID)+"号线程开始")
-        global Counter
+        print(str(self.threadID)+"号线程开始")
+        global Counter_1
+        global thread_EXIT
         while 1:
+            lock.acquire()
             if self.Urlqueue.empty():
+                lock.release()
                 break
-            Counter=Counter+1
-            print(str(Counter)+"/13176")
             num=self.Urlqueue.get()
+            Counter_1=Counter_1+1
+            print("+    "+str(Counter_1)+"/13176")
+            lock.release()
             url="http://ce.sysu.edu.cn/hope/Diaries/Index_"+str(num)+".aspx"
             self.Dataqueue.put(RequireData(url,self.headers))
-        print(str(threadID)+"号线程结束")
+        print(str(self.threadID)+"号线程结束")
 
 class DealDataThread(threading.Thread):
     def __init__(self,threadID,Dataqueue,lock,file):
@@ -39,18 +43,26 @@ class DealDataThread(threading.Thread):
         self.Dataqueue=Dataqueue
         self.Datalock=lock
         self.file=file
-        self.athreadID=threadID
+        self.threadID=threadID
     def run(self):
         global thread_EXIT
-        print(str(threadID)+"号线程开始")
-        while not thread_EXIT:
+        global Counter_2
+
+        print(str(self.threadID)+"号线程开始")
+        while 1:
             lock.acquire()
-            if not Dataqueue.empty: 
-                ProduceData(Dataqueue.get())
-                lock.release
+            if not self.Dataqueue.empty(): 
+                Counter_2=Counter_2+1
+                print("-    "+str(Counter_2)+"/13176")
+                ProduceData(self.Dataqueue.get())
+                lock.release()
             else:
-                lock.release
-        print(str(threadID)+"号线程结束")
+                lock.release()
+                if not thread_EXIT:
+                    pass
+                else :
+                    break
+        print(str(self.threadID)+"号线程结束")
                 
 
 def RequireData(url,headers):
@@ -62,10 +74,7 @@ def RequireData(url,headers):
 
 def ProduceData(TEXT):
     soup=BeautifulSoup(TEXT,"lxml")
-    #print(soup)
     content=soup.find_all("li",class_="internal_box_left_dairylist_li")
-    #print(content)
-    n=str(n)
     for item in content:
         for string_item in item.stripped_strings:
             #print(string_item)
@@ -74,7 +83,8 @@ def ProduceData(TEXT):
 
 
 thread_EXIT=0
-Counter=0
+Counter_1=0
+Counter_2=0
 
 file=open('日志.txt', 'w',encoding="utf-8") 
 Urlqueue=queue.Queue(13176)
@@ -82,17 +92,19 @@ Dataqueue=queue.Queue()
 threads=[]
 lock=threading.Lock()
 
-for i in range(13176):
+for i in range(1,301):
     Urlqueue.put(i)
-for threadID in range(1,33):
+for threadID in range(1,8):
     thread=CatchDataThread(threadID,Urlqueue,Dataqueue,lock)
     threads.append(thread)
     thread.start()
+    time.sleep(0.4)
 
-while not Urlqueue.empty():
+
+while not Urlqueue.empty ():
     pass
 
-for threadID in range(21,22):
+for threadID in range(8,9):
     thread=DealDataThread(threadID,Dataqueue,lock,file)
     threads.append(thread)
     thread.start()
@@ -100,10 +112,12 @@ for threadID in range(21,22):
 while not Dataqueue.empty():
     pass
 
+#time.sleep(15)
+
 thread_EXIT+=1
 
 for t in threads:
-    t.join()
+  t.join()
 
 file.close()
 txt_to_excel.txt_to_excel()
