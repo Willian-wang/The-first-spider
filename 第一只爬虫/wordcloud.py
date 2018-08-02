@@ -1,4 +1,0 @@
-
-import jieba
-
-file=open("")

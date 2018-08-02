@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f438cf6e-72f4-424d-ab41-80f01e326f26</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>第一只爬虫.py</StartupFile>
+    <StartupFile>txt_to_wordcloud.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="wordcloud.py">
+    <Compile Include="txt_to_wordcloud.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="txt_to_excel.py">
